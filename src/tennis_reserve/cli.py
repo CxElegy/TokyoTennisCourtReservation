@@ -3,6 +3,8 @@ from __future__ import annotations
 import argparse
 from datetime import UTC, datetime, timedelta
 
+from dotenv import load_dotenv
+
 from .config import load_config
 from .diff import filter_slots, new_slots
 from .notifiers import get_notifier
@@ -36,14 +38,28 @@ def check(config_path: str, state_path: str, force: bool = False) -> int:
     return 0
 
 
+def login(screenshot: str) -> int:
+    from .sites.edogawa import EdogawaSite
+
+    result = EdogawaSite().login(screenshot=screenshot)
+    print(f"login {'OK' if result.ok else 'FAILED'}: {result.url} {result.message}".rstrip())
+    print(f"screenshot: {screenshot}")
+    return 0 if result.ok else 1
+
+
 def main(argv: list[str] | None = None) -> int:
+    load_dotenv()
     p = argparse.ArgumentParser(prog="tennis-reserve")
     sub = p.add_subparsers(dest="cmd", required=True)
     c = sub.add_parser("check", help="fetch availability and notify about newly opened slots")
     c.add_argument("--config", default="config/facilities.yaml")
     c.add_argument("--state", default="data/state.json")
     c.add_argument("--force", action="store_true", help="ignore min_interval_minutes")
+    lg = sub.add_parser("login", help="try logging in to えどねっと with EDOGAWA_* env vars")
+    lg.add_argument("--screenshot", default="data/login.png")
     args = p.parse_args(argv)
+    if args.cmd == "login":
+        return login(args.screenshot)
     return check(args.config, args.state, args.force)
 
 

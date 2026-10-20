@@ -15,6 +15,14 @@
 - `storage.py` 前回結果を `data/state.json` に保存（Actions では cache で引き継ぐ）
 - `cli.py` `tennis-reserve check`
 
+## ログインの確認
+```bash
+# .env または環境変数に EDOGAWA_USER_ID / EDOGAWA_PASSWORD を設定してから
+uv sync --extra browser
+uv run playwright install chromium   # Claude Code クラウド環境では不要（PLAYWRIGHT_CHROMIUM_PATH を使う）
+uv run tennis-reserve login           # 結果を表示し、data/login.png に画面を保存
+```
+
 ## 注意
 - えどねっとの robots.txt は `/user/Home` と `*.html` 以外を Disallow。アクセスは低頻度に抑える。
 - 利用規約の本文が未確認。自動操作の可否を確認してから、フェーズ2以降に進む。

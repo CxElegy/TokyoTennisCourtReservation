@@ -3,7 +3,7 @@ name = "tennis-reserve"
 version = "0.1.0"
 description = "Edogawa-ku (えどねっと) tennis court availability monitor"
 requires-python = ">=3.11"
-dependencies = ["httpx>=0.27", "pyyaml>=6"]
+dependencies = ["httpx>=0.27", "pyyaml>=6", "python-dotenv>=1"]
 
 [project.optional-dependencies]
 browser = ["playwright>=1.45"]
