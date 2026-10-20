@@ -1,0 +1,28 @@
+name: check-availability
+
+on:
+  schedule:
+    - cron: "17 */1 * * *"   # hourly; the CLI also enforces min_interval_minutes
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - run: uv sync --extra browser
+      - name: Restore previous snapshot
+        uses: actions/cache@v4
+        with:
+          path: data
+          key: tennis-state-${{ github.run_id }}
+          restore-keys: tennis-state-
+      - run: uv run tennis-reserve check
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          LINE_CHANNEL_ACCESS_TOKEN: ${{ secrets.LINE_CHANNEL_ACCESS_TOKEN }}
+          LINE_TO: ${{ secrets.LINE_TO }}

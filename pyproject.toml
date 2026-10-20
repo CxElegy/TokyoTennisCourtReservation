@@ -1,0 +1,27 @@
+[project]
+name = "tennis-reserve"
+version = "0.1.0"
+description = "Edogawa-ku (えどねっと) tennis court availability monitor"
+requires-python = ">=3.11"
+dependencies = ["httpx>=0.27", "pyyaml>=6"]
+
+[project.optional-dependencies]
+browser = ["playwright>=1.45"]
+dev = ["pytest>=8", "ruff>=0.5"]
+
+[project.scripts]
+tennis-reserve = "tennis_reserve.cli:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/tennis_reserve"]
+
+[tool.ruff]
+line-length = 100
+src = ["src", "tests"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
